@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace Karell.Azure.Storage
 {
@@ -10,31 +9,31 @@ namespace Karell.Azure.Storage
 
         public CloudStorageAccount Instance { get { return _account; } }
 
-        public Account(string configurationSettingName, bool hostedService)
-        {
-            if (hostedService)
-            {
-                CloudStorageAccount.SetConfigurationSettingPublisher(
-                    (configName, configSettingPublisher) =>
-                    {
-                        var connectionString = RoleEnvironment.GetConfigurationSettingValue(configName);
-                        configSettingPublisher(connectionString);
-                    }
-                );
-            }
-            else
-            {
-                CloudStorageAccount.SetConfigurationSettingPublisher(
-                    (configName, configSettingPublisher) =>
-                    {
-                        var connectionString = ConfigurationManager.ConnectionStrings[configName].ConnectionString;
-                        configSettingPublisher(connectionString);
-                    }
-                );
-            }
+        //public Account(string configurationSettingName, bool hostedService)
+        //{
+        //    if (hostedService)
+        //    {
+        //        CloudStorageAccount.SetConfigurationSettingPublisher(
+        //            (configName, configSettingPublisher) =>
+        //            {
+        //                var connectionString = RoleEnvironment.GetConfigurationSettingValue(configName);
+        //                configSettingPublisher(connectionString);
+        //            }
+        //        );
+        //    }
+        //    else
+        //    {
+        //        CloudStorageAccount.SetConfigurationSettingPublisher(
+        //            (configName, configSettingPublisher) =>
+        //            {
+        //                var connectionString = ConfigurationManager.ConnectionStrings[configName].ConnectionString;
+        //                configSettingPublisher(connectionString);
+        //            }
+        //        );
+        //    }
 
-            _account = CloudStorageAccount.FromConfigurationSetting(configurationSettingName);
-        }
+        //    _account = CloudStorageAccount.FromConfigurationSetting(configurationSettingName);
+        //}
 
         public Account(string connectionString)
         {
