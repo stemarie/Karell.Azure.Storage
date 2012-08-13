@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.StorageClient;
 using ProtoBuf;
 
@@ -41,7 +42,7 @@ namespace Karell.Azure.Storage.Tests
         }
 
         [TestMethod]
-        public void Test_SaveItem()
+        public void Test_SaveLoadDeleteItem()
         {
             var x = new GenericBlobStorage<TestClass>(account, _containerName);
             x.Create();
@@ -50,6 +51,31 @@ namespace Karell.Azure.Storage.Tests
             TestClass value = x.Load(expected);
             Assert.AreEqual(expected.Value, value.Value);
             x.Delete(expected);
+            x.Delete();
+        }
+
+        [TestMethod]
+        public void Test_SaveListDeleteItem()
+        {
+            var x = new GenericBlobStorage<TestClass>(account, _containerName);
+            x.Create();
+            TestClass class1 = new TestClass { Filename = 1.ToString(), Value = 1 };
+            TestClass class2 = new TestClass { Filename = 2.ToString(), Value = 2 };
+            TestClass class3 = new TestClass { Filename = 3.ToString(), Value = 3 };
+            x.Save(class1);
+            x.Save(class2);
+            x.Save(class3);
+            var blobs = x.List();
+            Assert.AreEqual(3, blobs.Count);
+            foreach (string blob in blobs)
+            {
+                TestClass item = x.Load(blob);
+                Assert.IsTrue(item.Value > 0);
+                Assert.IsTrue(item.Value < 4);
+            }
+            x.Delete(class3);
+            x.Delete(class2);
+            x.Delete(class1);
             x.Delete();
         }
 

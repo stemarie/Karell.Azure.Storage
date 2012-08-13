@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.WindowsAzure.StorageClient;
 
 namespace Karell.Azure.Storage
@@ -32,6 +34,11 @@ namespace Karell.Azure.Storage
             return string.Format("{0}/{1}", GetTypename(), fileName);
         }
 
+        private static string GetDirectory()
+        {
+            return GetTypename();
+        }
+
         private static string GetTypename()
         {
             return typeof(T).ToString();
@@ -45,11 +52,10 @@ namespace Karell.Azure.Storage
 
         public T Load(IFilename item)
         {
-            var blob = Container.GetBlobReference(Filename(item.Filename));
-            return Deserialize(blob.DownloadByteArray());
+            return Load(Filename(item.Filename));
         }
 
-        public static byte[] Serialize(T data)
+        private static byte[] Serialize(T data)
         {
             using (var ms = new MemoryStream())
             {
@@ -58,7 +64,7 @@ namespace Karell.Azure.Storage
             }
         }
 
-        public static T Deserialize(byte[] data)
+        private static T Deserialize(byte[] data)
         {
             using (var ms = new MemoryStream(data))
             {
@@ -70,6 +76,17 @@ namespace Karell.Azure.Storage
         {
             var blob = Container.GetBlobReference(Filename(item.Filename));
             blob.DeleteIfExists();
+        }
+
+        public T Load(string uri)
+        {
+            var blob = Container.GetBlobReference(uri);
+            return Deserialize(blob.DownloadByteArray());
+        }
+
+        public List<string> List()
+        {
+            return Container.GetDirectoryReference(GetDirectory()).ListBlobs().Select(x => x.Uri.ToString()).ToList();
         }
     }
 }
