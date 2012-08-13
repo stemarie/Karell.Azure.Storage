@@ -46,8 +46,7 @@ namespace Karell.Azure.Storage
 
         public void Save(T i)
         {
-            var blob = Container.GetBlobReference(Filename(i.Filename));
-            blob.UploadByteArray(Serialize(i));
+            Container.GetBlobReference(Filename(i.Filename)).UploadByteArray(Serialize(i));
         }
 
         public T Load(IFilename item)
@@ -57,8 +56,7 @@ namespace Karell.Azure.Storage
 
         public bool Exists(IFilename item)
         {
-            var blob = Container.GetBlobReference(Filename(item.Filename));
-            return blob.Exists();
+            return Container.GetBlobReference(Filename(item.Filename)).Exists();
         }
 
         private static byte[] Serialize(T data)
@@ -80,14 +78,12 @@ namespace Karell.Azure.Storage
 
         public void Delete(T item)
         {
-            var blob = Container.GetBlobReference(Filename(item.Filename));
-            blob.DeleteIfExists();
+            Container.GetBlobReference(Filename(item.Filename)).DeleteIfExists();
         }
 
         public T Load(string uri)
         {
-            var blob = Container.GetBlobReference(uri);
-            return Deserialize(blob.DownloadByteArray());
+            return Deserialize(Container.GetBlobReference(uri).DownloadByteArray());
         }
 
         public List<string> List()

@@ -65,6 +65,7 @@ namespace Karell.Azure.Storage.Tests
             x.Save(class1);
             x.Save(class2);
             x.Save(class3);
+            Assert.IsTrue(x.Exists(class1));
             var blobs = x.List();
             Assert.AreEqual(3, blobs.Count);
             foreach (string blob in blobs)
