@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="BlobExtensions.cs" />
     <Compile Include="BlobItem.cs" />
     <Compile Include="BlobStorage.cs" />
     <Compile Include="BlobStorageBase.cs" />

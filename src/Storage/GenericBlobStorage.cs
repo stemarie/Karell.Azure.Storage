@@ -55,6 +55,12 @@ namespace Karell.Azure.Storage
             return Load(Filename(item.Filename));
         }
 
+        public bool Exists(IFilename item)
+        {
+            var blob = Container.GetBlobReference(Filename(item.Filename));
+            return blob.Exists();
+        }
+
         private static byte[] Serialize(T data)
         {
             using (var ms = new MemoryStream())
