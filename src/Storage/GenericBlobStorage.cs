@@ -86,9 +86,15 @@ namespace Karell.Azure.Storage
             return Deserialize(Container.GetBlobReference(uri).DownloadByteArray());
         }
 
-        public List<string> List()
+        public IList<T> List()
         {
-            return Container.GetDirectoryReference(GetDirectory()).ListBlobs().Select(x => x.Uri.ToString()).ToList();
+            return Container
+                .GetDirectoryReference(GetDirectory())
+                .ListBlobs()
+                .Select(x => x.Uri.ToString())
+                .ToList()
+                .Select(Load)
+                .ToList();
         }
     }
 }

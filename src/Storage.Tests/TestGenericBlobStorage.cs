@@ -68,7 +68,7 @@ namespace Karell.Azure.Storage.Tests
             Assert.IsTrue(x.Exists(class1));
             var blobs = x.List();
             Assert.AreEqual(3, blobs.Count);
-            foreach (string blob in blobs)
+            foreach (TestClass blob in blobs)
             {
                 TestClass item = x.Load(blob);
                 Assert.IsTrue(item.Value > 0);
